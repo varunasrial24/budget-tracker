@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Budget Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="budget-app">
+    <h2>Budget Tracker</h2>
+
+    <div class="cards">
+        <div class="card">
+            <p>Income</p>
+            <h3 id="income">₹0</h3>
+        </div>
+        <div class="card">
+            <p>Expense</p>
+            <h3 id="expense">₹0</h3>
+        </div>
+        <div class="card">
+            <p>Balance</p>
+            <h3 id="balance">₹0</h3>
+        </div>
+    </div>
+
+    <div class="input-section">
+        <input type="text" id="title" placeholder="Title">
+        <input type="number" id="amount" placeholder="Amount">
+        <select id="type">
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+        </select>
+        <button onclick="add()">Add</button>
+    </div>
+
+    <ul id="transactions"></ul>
+</div>
+
+<script>
+let totalIncome = 0;
+let totalExpense = 0;
+
+function add() {
+    const title = document.getElementById("title").value;
+    const amount = Number(document.getElementById("amount").value);
+    const type = document.getElementById("type").value;
+
+    if (title === "" || amount <= 0) return;
+
+    const li = document.createElement("li");
+
+    if (type === "income") {
+        li.className = "income";
+        totalIncome += amount;
+        li.innerHTML = `${title} <span>+₹${amount}</span>`;
+    } else {
+        li.className = "expense";
+        totalExpense += amount;
+        li.innerHTML = `${title} <span>-₹${amount}</span>`;
+    }
+
+    li.innerHTML += `<button onclick="remove(this, '${type}', ${amount})">X</button>`;
+    document.getElementById("transactions").appendChild(li);
+
+    update();
+    document.getElementById("title").value = "";
+    document.getElementById("amount").value = "";
+}
+
+function remove(btn, type, amount) {
+    btn.parentElement.remove();
+
+    if (type === "income") totalIncome -= amount;
+    else totalExpense -= amount;
+
+    update();
+}
+
+function update() {
+    document.getElementById("income").innerText = "₹" + totalIncome;
+    document.getElementById("expense").innerText = "₹" + totalExpense;
+    document.getElementById("balance").innerText =
+        "₹" + (totalIncome - totalExpense);
+}
+</script>
+
+</body>
+</html>
